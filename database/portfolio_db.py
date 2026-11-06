@@ -19,8 +19,6 @@ def get_portfolio():
 
     rows = cursor.fetchall()
 
-    conn.close()
-
     portfolio = {}
 
     for symbol, asset_type, side, quantity, price in rows:
@@ -30,42 +28,54 @@ def get_portfolio():
             portfolio[symbol] = {
                 "stock_qty": 0,
                 "stock_cost": 0,
-
                 "call_qty": 0,
                 "call_cost": 0,
-
                 "put_qty": 0,
-                "put_cost": 0
+                "put_cost": 0,
+                "current_price": 0
             }
 
         qty = float(quantity)
         price = float(price)
 
+        if side.lower() == "sell":
+            qty = -qty
+
         if asset_type.lower() == "stock":
 
-            if side.lower() == "buy":
-                portfolio[symbol]["stock_qty"] += qty
+            if qty > 0:
                 portfolio[symbol]["stock_cost"] += qty * price
 
-            else:
-                portfolio[symbol]["stock_qty"] -= qty
+            portfolio[symbol]["stock_qty"] += qty
 
         elif asset_type.lower() == "call":
 
-            if side.lower() == "buy":
-                portfolio[symbol]["call_qty"] += qty
+            if qty > 0:
                 portfolio[symbol]["call_cost"] += qty * price
 
-            else:
-                portfolio[symbol]["call_qty"] -= qty
+            portfolio[symbol]["call_qty"] += qty
 
         elif asset_type.lower() == "put":
 
-            if side.lower() == "buy":
-                portfolio[symbol]["put_qty"] += qty
+            if qty > 0:
                 portfolio[symbol]["put_cost"] += qty * price
 
-            else:
-                portfolio[symbol]["put_qty"] -= qty
+            portfolio[symbol]["put_qty"] += qty
+
+    cursor.execute("""
+        SELECT
+            symbol,
+            price
+        FROM current_prices
+    """)
+
+    prices = cursor.fetchall()
+
+    for symbol, price in prices:
+
+        if symbol in portfolio:
+            portfolio[symbol]["current_price"] = float(price)
+
+    conn.close()
 
     return portfolio

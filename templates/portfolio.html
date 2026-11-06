@@ -18,7 +18,7 @@
 
 {% for symbol, position in portfolio.items() %}
 
-<div style="border:2px solid black;padding:15px;margin-bottom:15px;">
+<div style="border:2px solid black;padding:15px;margin-bottom:20px;">
 
 <h2>{{ symbol }}</h2>
 
@@ -28,12 +28,34 @@ Stock Position:
 </p>
 
 {% if position.stock_qty > 0 %}
+
 <p>
-Average Stock Cost:
+Average Cost:
 <strong>
 {{ "%.2f"|format(position.stock_cost / position.stock_qty) }}
 </strong>
 </p>
+
+<p>
+Current Price:
+<strong>
+{{ "%.2f"|format(position.current_price) }}
+</strong>
+</p>
+
+<p>
+Unrealized P/L:
+<strong>
+{{
+"%.2f"|format(
+(position.current_price -
+(position.stock_cost / position.stock_qty))
+* position.stock_qty
+)
+}}
+</strong>
+</p>
+
 {% endif %}
 
 <hr>
