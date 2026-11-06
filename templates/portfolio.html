@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<h1>Portfolio</h1>
+<h1>Portfolio Summary</h1>
 
 <a href="/">Dashboard</a> |
 <a href="/portfolio">Portfolio</a> |
@@ -15,27 +15,26 @@
 
 <hr>
 
-{% for row in portfolio %}
+{% for symbol, position in portfolio.items() %}
 
-<div style="border:1px solid black;padding:10px;margin-bottom:10px;">
+<div style="border:2px solid black;padding:15px;margin-bottom:15px;">
 
-    Symbol:
-    <strong>{{ row[0] }}</strong>
+<h2>{{ symbol }}</h2>
 
-    <br>
+<p>
+Stock Position:
+<strong>{{ position.stock }}</strong>
+</p>
 
-    Asset:
-    {{ row[1] }}
+<p>
+Call Contracts:
+<strong>{{ position.call }}</strong>
+</p>
 
-    <br>
-
-    Side:
-    {{ row[2] }}
-
-    <br>
-
-    Quantity:
-    {{ row[3] }}
+<p>
+Put Contracts:
+<strong>{{ position.put }}</strong>
+</p>
 
 </div>
 

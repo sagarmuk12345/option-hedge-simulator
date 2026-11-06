@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request
 
-from database.trade_db import save_trade, get_all_trades
+from database.trade_db import (
+    save_trade,
+    get_all_trades,
+    delete_trade
+)
+
 from database.portfolio_db import get_portfolio
 
 app = Flask(__name__)
@@ -45,6 +50,18 @@ def trades():
     return render_template(
         "trades.html",
         trades=trades
+    )
+
+
+# DELETE TRADE
+@app.route("/delete_trade/<int:trade_id>")
+def remove_trade(trade_id):
+
+    delete_trade(trade_id)
+
+    return render_template(
+        "trades.html",
+        trades=get_all_trades()
     )
 
 

@@ -50,6 +50,7 @@ def get_all_trades():
 
     cursor.execute("""
         SELECT
+            id,
             symbol,
             asset_type,
             side,
@@ -66,3 +67,18 @@ def get_all_trades():
     conn.close()
 
     return rows
+
+
+def delete_trade(trade_id):
+
+    conn = sqlite3.connect("database/trades.db")
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM trades WHERE id = ?",
+        (trade_id,)
+    )
+
+    conn.commit()
+    conn.close()

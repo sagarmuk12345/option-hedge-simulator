@@ -62,7 +62,7 @@
 <br><br>
 
 <button type="submit">
-Save Trade
+    Save Trade
 </button>
 
 </form>
@@ -75,25 +75,31 @@ Save Trade
 
 <div style="border:1px solid black;padding:10px;margin-bottom:10px;">
 
-<strong>{{ trade[0] }}</strong>
+    <strong>{{ trade[1] }}</strong>
 
-<br>
+    <br>
 
-{{ trade[2] }}
-{{ trade[3] }}
-{{ trade[1] }}
+    {{ trade[3] }}
+    {{ trade[4] }}
+    {{ trade[2] }}
 
-<br>
+    <br>
 
-Price: {{ trade[4] }}
+    Price: {{ trade[5] }}
 
-<br>
+    <br>
 
-Strike: {{ trade[5] }}
+    Strike: {{ trade[6] }}
 
-<br>
+    <br>
 
-Expiry: {{ trade[6] }}
+    Expiry: {{ trade[7] }}
+
+    <br><br>
+
+    <a href="/delete_trade/{{ trade[0] }}">
+        Delete
+    </a>
 
 </div>
 
