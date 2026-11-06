@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Portfolio</title>
+    <title>Portfolio Summary</title>
 </head>
 <body>
 
@@ -10,6 +10,7 @@
 <a href="/">Dashboard</a> |
 <a href="/portfolio">Portfolio</a> |
 <a href="/trades">Trades</a> |
+<a href="/prices">Prices</a> |
 <a href="/scenario">Scenario</a> |
 <a href="/heatmap">Heat Map</a>
 
@@ -23,18 +24,49 @@
 
 <p>
 Stock Position:
-<strong>{{ position.stock }}</strong>
+<strong>{{ position.stock_qty }}</strong>
 </p>
+
+{% if position.stock_qty > 0 %}
+<p>
+Average Stock Cost:
+<strong>
+{{ "%.2f"|format(position.stock_cost / position.stock_qty) }}
+</strong>
+</p>
+{% endif %}
+
+<hr>
 
 <p>
 Call Contracts:
-<strong>{{ position.call }}</strong>
+<strong>{{ position.call_qty }}</strong>
 </p>
+
+{% if position.call_qty > 0 %}
+<p>
+Average Call Cost:
+<strong>
+{{ "%.2f"|format(position.call_cost / position.call_qty) }}
+</strong>
+</p>
+{% endif %}
+
+<hr>
 
 <p>
 Put Contracts:
-<strong>{{ position.put }}</strong>
+<strong>{{ position.put_qty }}</strong>
 </p>
+
+{% if position.put_qty > 0 %}
+<p>
+Average Put Cost:
+<strong>
+{{ "%.2f"|format(position.put_cost / position.put_qty) }}
+</strong>
+</p>
+{% endif %}
 
 </div>
 

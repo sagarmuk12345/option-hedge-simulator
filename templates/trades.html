@@ -10,6 +10,7 @@
 <a href="/">Dashboard</a> |
 <a href="/portfolio">Portfolio</a> |
 <a href="/trades">Trades</a> |
+<a href="/prices">Prices</a> |
 <a href="/scenario">Scenario</a> |
 <a href="/heatmap">Heat Map</a>
 
@@ -25,6 +26,7 @@
 <br><br>
 
 <label>Asset Type:</label>
+
 <select name="asset_type">
     <option>Stock</option>
     <option>Call</option>
@@ -34,6 +36,7 @@
 <br><br>
 
 <label>Side:</label>
+
 <select name="side">
     <option>Buy</option>
     <option>Sell</option>
@@ -42,12 +45,12 @@
 <br><br>
 
 <label>Quantity:</label>
-<input type="number" name="quantity">
+<input type="number" name="quantity" required>
 
 <br><br>
 
 <label>Price:</label>
-<input type="number" step="0.01" name="price">
+<input type="number" step="0.01" name="price" required>
 
 <br><br>
 
@@ -62,7 +65,7 @@
 <br><br>
 
 <button type="submit">
-    Save Trade
+Save Trade
 </button>
 
 </form>
@@ -75,31 +78,31 @@
 
 <div style="border:1px solid black;padding:10px;margin-bottom:10px;">
 
-    <strong>{{ trade[1] }}</strong>
+<strong>{{ trade[1] }}</strong>
 
-    <br>
+<br>
 
-    {{ trade[3] }}
-    {{ trade[4] }}
-    {{ trade[2] }}
+{{ trade[3] }}
+{{ trade[4] }}
+{{ trade[2] }}
 
-    <br>
+<br>
 
-    Price: {{ trade[5] }}
+Price: {{ trade[5] }}
 
-    <br>
+<br>
 
-    Strike: {{ trade[6] }}
+Strike: {{ trade[6] }}
 
-    <br>
+<br>
 
-    Expiry: {{ trade[7] }}
+Expiry: {{ trade[7] }}
 
-    <br><br>
+<br><br>
 
-    <a href="/delete_trade/{{ trade[0] }}">
-        Delete
-    </a>
+<a href="/delete_trade/{{ trade[0] }}">
+Delete
+</a>
 
 </div>
 

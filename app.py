@@ -8,6 +8,11 @@ from database.trade_db import (
 
 from database.portfolio_db import get_portfolio
 
+from database.price_db import (
+    save_price,
+    get_all_prices
+)
+
 app = Flask(__name__)
 
 
@@ -45,15 +50,13 @@ def trades():
             request.form.get("expiry")
         )
 
-    trades = get_all_trades()
-
     return render_template(
         "trades.html",
-        trades=trades
+        trades=get_all_trades()
     )
 
 
-# DELETE TRADE
+# Delete Trade
 @app.route("/delete_trade/<int:trade_id>")
 def remove_trade(trade_id):
 
@@ -62,6 +65,23 @@ def remove_trade(trade_id):
     return render_template(
         "trades.html",
         trades=get_all_trades()
+    )
+
+
+# Prices
+@app.route("/prices", methods=["GET", "POST"])
+def prices():
+
+    if request.method == "POST":
+
+        save_price(
+            request.form.get("symbol"),
+            request.form.get("price")
+        )
+
+    return render_template(
+        "prices.html",
+        prices=get_all_prices()
     )
 
 
@@ -74,6 +94,7 @@ def scenario():
     <a href="/">Dashboard</a> |
     <a href="/portfolio">Portfolio</a> |
     <a href="/trades">Trades</a> |
+    <a href="/prices">Prices</a> |
     <a href="/heatmap">Heat Map</a>
 
     <hr>
@@ -91,6 +112,7 @@ def heatmap():
     <a href="/">Dashboard</a> |
     <a href="/portfolio">Portfolio</a> |
     <a href="/trades">Trades</a> |
+    <a href="/prices">Prices</a> |
     <a href="/scenario">Scenario</a>
 
     <hr>
