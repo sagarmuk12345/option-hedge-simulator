@@ -23,15 +23,20 @@ def get_portfolio():
 
     for symbol, asset_type, side, quantity, price in rows:
 
+        symbol = symbol.upper()
+
         if symbol not in portfolio:
 
             portfolio[symbol] = {
                 "stock_qty": 0,
                 "stock_cost": 0,
+
                 "call_qty": 0,
                 "call_cost": 0,
+
                 "put_qty": 0,
                 "put_cost": 0,
+
                 "current_price": 0
             }
 
@@ -48,20 +53,6 @@ def get_portfolio():
 
             portfolio[symbol]["stock_qty"] += qty
 
-        elif asset_type.lower() == "call":
-
-            if qty > 0:
-                portfolio[symbol]["call_cost"] += qty * price
-
-            portfolio[symbol]["call_qty"] += qty
-
-        elif asset_type.lower() == "put":
-
-            if qty > 0:
-                portfolio[symbol]["put_cost"] += qty * price
-
-            portfolio[symbol]["put_qty"] += qty
-
     cursor.execute("""
         SELECT
             symbol,
@@ -72,6 +63,8 @@ def get_portfolio():
     prices = cursor.fetchall()
 
     for symbol, price in prices:
+
+        symbol = symbol.upper()
 
         if symbol in portfolio:
             portfolio[symbol]["current_price"] = float(price)

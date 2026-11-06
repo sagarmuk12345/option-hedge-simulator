@@ -86,21 +86,51 @@ def prices():
 
 
 # Scenario Analysis
-@app.route("/scenario")
+@app.route("/scenario", methods=["GET", "POST"])
 def scenario():
-    return """
-    <h1>Scenario Analysis</h1>
 
-    <a href="/">Dashboard</a> |
-    <a href="/portfolio">Portfolio</a> |
-    <a href="/trades">Trades</a> |
-    <a href="/prices">Prices</a> |
-    <a href="/heatmap">Heat Map</a>
+    result = None
 
-    <hr>
+    if request.method == "POST":
 
-    <p>Scenario Engine Coming Soon</p>
-    """
+        portfolio = get_portfolio()
+
+        symbol = request.form.get("symbol").upper()
+
+        future_price = float(
+            request.form.get("future_price")
+        )
+
+        if symbol in portfolio:
+
+            shares = portfolio[symbol]["stock_qty"]
+
+            avg_cost = 0
+
+            if shares > 0:
+
+                avg_cost = (
+                    portfolio[symbol]["stock_cost"]
+                    / shares
+                )
+
+            pnl = (
+                future_price
+                - avg_cost
+            ) * shares
+
+            result = {
+                "symbol": symbol,
+                "shares": shares,
+                "avg_cost": round(avg_cost, 2),
+                "future_price": future_price,
+                "pnl": round(pnl, 2)
+            }
+
+    return render_template(
+        "scenario.html",
+        result=result
+    )
 
 
 # Heat Map

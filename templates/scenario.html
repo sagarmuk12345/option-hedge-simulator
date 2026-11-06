@@ -1,19 +1,80 @@
-<h1>Update Current Prices</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scenario Analysis</title>
+</head>
+<body>
 
-<form>
+<h1>Stock Scenario Calculator</h1>
 
-Symbol:
-<input type="text">
+<a href="/">Dashboard</a> |
+<a href="/portfolio">Portfolio</a> |
+<a href="/trades">Trades</a> |
+<a href="/prices">Prices</a> |
+<a href="/scenario">Scenario</a> |
+<a href="/heatmap">Heat Map</a>
+
+<hr>
+
+<h2>Future Stock Scenario</h2>
+
+<form method="POST">
+
+<label>Symbol:</label>
+
+<input type="text"
+       name="symbol"
+       required>
 
 <br><br>
 
-CMP:
-<input type="number" step="0.01">
+<label>Future Stock Price:</label>
+
+<input type="number"
+       step="0.01"
+       name="future_price"
+       required>
 
 <br><br>
 
-<button>
-Update
+<button type="submit">
+Calculate
 </button>
 
 </form>
+
+<hr>
+
+{% if result %}
+
+<h2>Scenario Result</h2>
+
+<p>
+Symbol:
+<strong>{{ result.symbol }}</strong>
+</p>
+
+<p>
+Shares:
+<strong>{{ result.shares }}</strong>
+</p>
+
+<p>
+Average Cost:
+<strong>{{ result.avg_cost }}</strong>
+</p>
+
+<p>
+Future Price:
+<strong>{{ result.future_price }}</strong>
+</p>
+
+<p>
+Future Profit/Loss:
+<strong>{{ result.pnl }}</strong>
+</p>
+
+{% endif %}
+
+</body>
+</html>
