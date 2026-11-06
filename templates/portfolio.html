@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio</title>
+</head>
+<body>
+
+<h1>Portfolio</h1>
+
+<a href="/">Dashboard</a> |
+<a href="/portfolio">Portfolio</a> |
+<a href="/trades">Trades</a> |
+<a href="/scenario">Scenario</a> |
+<a href="/heatmap">Heat Map</a>
+
+<hr>
+
+{% for row in portfolio %}
+
+<div style="border:1px solid black;padding:10px;margin-bottom:10px;">
+
+    Symbol:
+    <strong>{{ row[0] }}</strong>
+
+    <br>
+
+    Asset:
+    {{ row[1] }}
+
+    <br>
+
+    Side:
+    {{ row[2] }}
+
+    <br>
+
+    Quantity:
+    {{ row[3] }}
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>

@@ -17,15 +17,14 @@
 
 <h2>Add Trade</h2>
 
-<form>
+<form method="POST">
 
 <label>Symbol:</label>
-<input type="text" name="symbol" placeholder="GOOGL">
+<input type="text" name="symbol" required>
 
 <br><br>
 
 <label>Asset Type:</label>
-
 <select name="asset_type">
     <option>Stock</option>
     <option>Call</option>
@@ -35,7 +34,6 @@
 <br><br>
 
 <label>Side:</label>
-
 <select name="side">
     <option>Buy</option>
     <option>Sell</option>
@@ -64,10 +62,42 @@
 <br><br>
 
 <button type="submit">
-    Save Trade
+Save Trade
 </button>
 
 </form>
+
+<hr>
+
+<h2>Saved Trades</h2>
+
+{% for trade in trades %}
+
+<div style="border:1px solid black;padding:10px;margin-bottom:10px;">
+
+<strong>{{ trade[0] }}</strong>
+
+<br>
+
+{{ trade[2] }}
+{{ trade[3] }}
+{{ trade[1] }}
+
+<br>
+
+Price: {{ trade[4] }}
+
+<br>
+
+Strike: {{ trade[5] }}
+
+<br>
+
+Expiry: {{ trade[6] }}
+
+</div>
+
+{% endfor %}
 
 </body>
 </html>

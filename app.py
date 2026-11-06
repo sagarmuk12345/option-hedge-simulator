@@ -1,34 +1,54 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
+
+from database.trade_db import save_trade, get_all_trades
+from database.portfolio_db import get_portfolio
 
 app = Flask(__name__)
+
 
 # Dashboard
 @app.route("/")
 def dashboard():
     return render_template("index.html")
 
-# Portfolio Page
+
+# Portfolio
 @app.route("/portfolio")
 def portfolio():
-    return """
-    <h1>Portfolio Page</h1>
 
-    <a href="/">Dashboard</a> |
-    <a href="/trades">Trades</a> |
-    <a href="/scenario">Scenario</a> |
-    <a href="/heatmap">Heat Map</a>
+    portfolio = get_portfolio()
 
-    <hr>
+    return render_template(
+        "portfolio.html",
+        portfolio=portfolio
+    )
 
-    <p>No positions yet.</p>
-    """
 
-# Trades Page
-@app.route("/trades")
+# Trades
+@app.route("/trades", methods=["GET", "POST"])
 def trades():
-    return render_template("trades.html")
 
-# Scenario Analysis Page
+    if request.method == "POST":
+
+        save_trade(
+            request.form.get("symbol"),
+            request.form.get("asset_type"),
+            request.form.get("side"),
+            request.form.get("quantity"),
+            request.form.get("price"),
+            request.form.get("strike"),
+            request.form.get("expiry")
+        )
+
+    trades = get_all_trades()
+
+    return render_template(
+        "trades.html",
+        trades=trades
+    )
+
+
+# Scenario Analysis
 @app.route("/scenario")
 def scenario():
     return """
@@ -41,10 +61,11 @@ def scenario():
 
     <hr>
 
-    <p>Future Scenario Engine Coming Soon</p>
+    <p>Scenario Engine Coming Soon</p>
     """
 
-# Heat Map Page
+
+# Heat Map
 @app.route("/heatmap")
 def heatmap():
     return """
@@ -60,6 +81,6 @@ def heatmap():
     <p>Heat Map Coming Soon</p>
     """
 
-# Start Application
+
 if __name__ == "__main__":
     app.run(debug=True)
