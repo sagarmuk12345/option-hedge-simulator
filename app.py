@@ -3,7 +3,8 @@ from flask import Flask, render_template, request
 from database.trade_db import (
     save_trade,
     get_all_trades,
-    delete_trade
+    delete_trade,
+    get_option_trades
 )
 
 from database.portfolio_db import get_portfolio
@@ -11,6 +12,11 @@ from database.portfolio_db import get_portfolio
 from database.price_db import (
     save_price,
     get_all_prices
+)
+
+from engine.option_engine import (
+    call_profit,
+    put_profit
 )
 
 app = Flask(__name__)
@@ -95,18 +101,12 @@ def scenario():
 
         portfolio = get_portfolio()
 
-        symbol = request.form.get(
-            "symbol"
-        ).upper()
+        symbol = request.form.get("symbol").upper()
 
-        future_date = request.form.get(
-            "future_date"
-        )
+        future_date = request.form.get("future_date")
 
         future_price = float(
-            request.form.get(
-                "future_price"
-            )
+            request.form.get("future_price")
         )
 
         if symbol in portfolio:
@@ -115,6 +115,8 @@ def scenario():
 
             avg_cost = 0
 
+            stock_pnl = 0
+
             if shares > 0:
 
                 avg_cost = (
@@ -122,18 +124,84 @@ def scenario():
                     / shares
                 )
 
-            pnl = (
-                future_price
-                - avg_cost
-            ) * shares
+                stock_pnl = (
+                    future_price
+                    - avg_cost
+                ) * shares
+
+            option_pnl = 0
+
+            option_trades = get_option_trades(
+                symbol
+            )
+
+            for trade in option_trades:
+
+                asset_type = trade[0]
+                quantity = float(trade[1])
+                premium = float(trade[2])
+
+                if trade[3] in (
+                    None,
+                    "",
+                    "None"
+                ):
+                    continue
+
+                strike = float(trade[3])
+
+                if asset_type.lower() == "call":
+
+                    option_pnl += call_profit(
+                        future_price,
+                        strike,
+                        premium,
+                        quantity
+                    )
+
+                elif asset_type.lower() == "put":
+
+                    option_pnl += put_profit(
+                        future_price,
+                        strike,
+                        premium,
+                        quantity
+                    )
+
+            total_pnl = (
+                stock_pnl
+                + option_pnl
+            )
 
             result = {
+
                 "symbol": symbol,
+
                 "future_date": future_date,
+
                 "shares": shares,
-                "avg_cost": round(avg_cost, 2),
+
+                "avg_cost": round(
+                    avg_cost,
+                    2
+                ),
+
                 "future_price": future_price,
-                "pnl": round(pnl, 2)
+
+                "stock_pnl": round(
+                    stock_pnl,
+                    2
+                ),
+
+                "option_pnl": round(
+                    option_pnl,
+                    2
+                ),
+
+                "total_pnl": round(
+                    total_pnl,
+                    2
+                )
             }
 
     return render_template(
