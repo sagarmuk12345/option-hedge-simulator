@@ -95,10 +95,18 @@ def scenario():
 
         portfolio = get_portfolio()
 
-        symbol = request.form.get("symbol").upper()
+        symbol = request.form.get(
+            "symbol"
+        ).upper()
+
+        future_date = request.form.get(
+            "future_date"
+        )
 
         future_price = float(
-            request.form.get("future_price")
+            request.form.get(
+                "future_price"
+            )
         )
 
         if symbol in portfolio:
@@ -121,6 +129,7 @@ def scenario():
 
             result = {
                 "symbol": symbol,
+                "future_date": future_date,
                 "shares": shares,
                 "avg_cost": round(avg_cost, 2),
                 "future_price": future_price,
@@ -133,22 +142,77 @@ def scenario():
     )
 
 
-# Heat Map
-@app.route("/heatmap")
+# Dynamic Heat Map
+@app.route("/heatmap", methods=["GET", "POST"])
 def heatmap():
-    return """
-    <h1>Heat Map</h1>
 
-    <a href="/">Dashboard</a> |
-    <a href="/portfolio">Portfolio</a> |
-    <a href="/trades">Trades</a> |
-    <a href="/prices">Prices</a> |
-    <a href="/scenario">Scenario</a>
+    results = None
 
-    <hr>
+    if request.method == "POST":
 
-    <p>Heat Map Coming Soon</p>
-    """
+        symbol = request.form.get(
+            "symbol"
+        ).upper()
+
+        start_price = float(
+            request.form.get(
+                "start_price"
+            )
+        )
+
+        end_price = float(
+            request.form.get(
+                "end_price"
+            )
+        )
+
+        step_size = float(
+            request.form.get(
+                "step_size"
+            )
+        )
+
+        portfolio = get_portfolio()
+
+        if symbol in portfolio:
+
+            shares = portfolio[symbol]["stock_qty"]
+
+            if shares > 0:
+
+                avg_cost = (
+                    portfolio[symbol]["stock_cost"]
+                    / shares
+                )
+
+                results = []
+
+                current_price = start_price
+
+                while current_price <= end_price:
+
+                    pnl = (
+                        current_price
+                        - avg_cost
+                    ) * shares
+
+                    results.append({
+                        "price": round(
+                            current_price,
+                            2
+                        ),
+                        "pnl": round(
+                            pnl,
+                            2
+                        )
+                    })
+
+                    current_price += step_size
+
+    return render_template(
+        "heatmap.html",
+        results=results
+    )
 
 
 if __name__ == "__main__":

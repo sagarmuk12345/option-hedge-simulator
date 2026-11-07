@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heat Map</title>
+</head>
+<body>
+
+<h1>Dynamic Heat Map</h1>
+
+<a href="/">Dashboard</a> |
+<a href="/portfolio">Portfolio</a> |
+<a href="/trades">Trades</a> |
+<a href="/prices">Prices</a> |
+<a href="/scenario">Scenario</a> |
+<a href="/heatmap">Heat Map</a>
+
+<hr>
+
+<form method="POST">
+
+<label>Symbol:</label>
+
+<input type="text"
+       name="symbol"
+       required>
+
+<br><br>
+
+<label>Start Price:</label>
+
+<input type="number"
+       step="0.01"
+       name="start_price"
+       required>
+
+<br><br>
+
+<label>End Price:</label>
+
+<input type="number"
+       step="0.01"
+       name="end_price"
+       required>
+
+<br><br>
+
+<label>Step Size:</label>
+
+<input type="number"
+       step="0.01"
+       name="step_size"
+       required>
+
+<br><br>
+
+<button type="submit">
+Generate Heat Map
+</button>
+
+</form>
+
+<hr>
+
+{% if results %}
+
+<table border="1" cellpadding="10">
+
+<tr>
+<th>Future Price</th>
+<th>Profit / Loss</th>
+</tr>
+
+{% for row in results %}
+
+<tr>
+
+<td>
+{{ row.price }}
+</td>
+
+<td
+{% if row.pnl > 0 %}
+style="background-color:lightgreen"
+{% elif row.pnl < 0 %}
+style="background-color:#ffb3b3"
+{% endif %}
+>
+
+{{ row.pnl }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endif %}
+
+</body>
+</html>
