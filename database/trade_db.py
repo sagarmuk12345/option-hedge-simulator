@@ -81,4 +81,29 @@ def delete_trade(trade_id):
     )
 
     conn.commit()
+
     conn.close()
+
+
+def get_option_trades(symbol):
+
+    conn = sqlite3.connect("database/trades.db")
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            asset_type,
+            quantity,
+            price,
+            strike
+        FROM trades
+        WHERE symbol = ?
+    """,
+    (symbol,))
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
